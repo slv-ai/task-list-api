@@ -30,10 +30,18 @@ def get_models_with_filters(cls,filters= None):
     query = db.select(cls)
     if filters:
         for attribute, value in filters.items():
+            if attribute == "sort":
+                continue
             if hasattr(cls,attribute):
                 query = query.where(
-                    getattr(cls,attribute).ilike(f"%{value}%")
-                )
-    models = db.session.scalars(query.order_by(cls.id))
+                        getattr(cls,attribute).ilike(f"%{value}%")
+                    )
+    sort_order = filters.get("sort","asc")
+    if sort_order== "desc":
+        query = query.order_by(cls.title.desc())
+    else:
+        query = query.order_by(cls.title.asc())
+                
+    models = db.session.scalars(query)
     model_response = [model.to_dict() for model in models]
     return model_response
