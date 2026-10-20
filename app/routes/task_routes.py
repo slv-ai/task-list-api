@@ -1,8 +1,12 @@
-from flask import Blueprint, request, Response
+from flask import Blueprint, request, Response 
 from app.models.task import Task
 from .route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 from datetime import datetime
+import os
+import requests
+
+
 
 
 bp = Blueprint("tasks_bp",__name__,url_prefix="/tasks")
@@ -47,7 +51,24 @@ def mark_complete(task_id):
     
     if task.completed_at is None:
         task.completed_at = datetime.now()
-    db.session.commit()
+        db.session.commit()
+
+        slack_token = os.environ.get("SLACK_BOT_TOKEN")
+        slack_channel = os.environ.get("CHANNEL_ID")
+        
+
+        headers = {
+        "Authorization": f"Bearer {slack_token}",
+        "Content-Type": "application/json; charset=utf-8"
+        }
+
+        payload = {
+        "channel": slack_channel,
+        "text": f"Someone just completed the task {task.title} "
+        }
+
+        requests.post("https://slack.com/api/chat.postMessage", headers=headers, json = payload)
+
     return Response(status = 204, mimetype="application/json")
 
 @bp.patch("/<task_id>/mark_incomplete")
