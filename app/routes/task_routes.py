@@ -35,7 +35,7 @@ def update_task(task_id):
 
     db.session.commit()
 
-    return Response(status= 204, mimetype="application/json") #204 no content
+    return Response(status= 204, mimetype="application/json")
 
 @bp.delete("/<task_id>")
 def delete_task(task_id):
