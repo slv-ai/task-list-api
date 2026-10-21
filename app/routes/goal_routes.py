@@ -51,7 +51,7 @@ def create_task_ids_for_goal(goal_id):
     db.session.commit()
     return {
         "id" : goal.id,
-        "task_ids" : task_ids
+        "task_ids" : [task.id for task in goal.tasks]
     },200
 
 @bp.get("/<goal_id>/tasks")
