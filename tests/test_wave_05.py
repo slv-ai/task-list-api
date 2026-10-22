@@ -149,7 +149,6 @@ def test_update_goal(client, one_goal):
     # Assert
     # ---- Complete Assertions Here ----
     assert response.status_code == 204
-    
     query = db.select(Goal).where(Goal.id == 1)
     goal = db.session.scalar(query)
     assert goal.title == "Build a habit of waking up early"
@@ -193,8 +192,6 @@ def test_delete_goal(client, one_goal):
 
     query = db.select(Goal).where(Goal.id == 1)
     assert db.session.scalar(query) is None
-
-    
     # *****************************************************************
     # **Complete test with assertion about response body***************
     # *****************************************************************

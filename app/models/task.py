@@ -15,7 +15,7 @@ class Task(db.Model):
     goal_id: Mapped[int] = mapped_column(ForeignKey("goal.id"),nullable=True)
     goal: Mapped[Optional["Goal"]] = relationship(back_populates="tasks")
     
-
+    
     def to_dict(self):
         task_as_dict = {}
         task_as_dict['id'] = self.id
